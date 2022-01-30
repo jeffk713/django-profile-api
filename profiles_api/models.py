@@ -2,15 +2,45 @@ from django.db import models
 
 # below 2 lines are to overwrite default Django user model. refer to doc.
 from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionMixin
+from django.contrib.auth.models import PermissionsMixin
+
+from django.contrib.auth.models import BaseUserManager
 
 
-class UserProfile(AbstractBaseUser, PermissionMixin):
+class UserProfileManager(BaseUserManager):
+  """manger for user profiles"""
+  
+  def create_user(self, email, name, password = None):
+    """create a new uer profile"""
+    if not email:
+      raise ValueError('User must have an email')
+    
+    email = email.normalize_email(email)
+    user = user.model(email = email, name = name)
+
+    # set hashed password, 'set_password' comes from AbstractBaseUser
+    user.set_password(password)
+    user.save(using = self._db) # standard procedure in django to save
+    
+    return user
+
+  def create_super_user(self, email, name, password):
+    """create an admin user with given details"""
+    user = self.create_user(email, name, password) # 'self' parameter is automatically passed in
+    
+    user.is_superuser = True # is_superuser comes from PermissionsMixin
+    user.is_staff = True
+    user.save(using = self._db)
+    
+    return user
+      
+
+class UserProfile(AbstractBaseUser, PermissionsMixin):
   """Database model for users in the system"""
-  email = models.EmailField(max_length=255, unique=True)
-  name = models.CharField(max_length=255)
-  is_active = models.BooleanField(default=True)
-  is_staff = models.BooleanField(default=False)
+  email = models.EmailField(max_length = 255, unique = True)
+  name = models.CharField(max_length = 255)
+  is_active = models.BooleanField(default = True)
+  is_staff = models.BooleanField(default = False)
   
   objects = UserProfileManager()
   
