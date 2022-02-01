@@ -44,7 +44,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
   
   objects = UserProfileManager()
   
-  # username file is required by just writing "USERNAME_FIELD = 'email'"
+  # username field is required by just writing "USERNAME_FIELD = 'email'"
   USERNAME_FIELD = 'email' # overwriting username, we pass email instead of username
   REQUIRED_FIELDS = ['name'] 
   

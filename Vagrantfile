@@ -15,8 +15,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64" 
   config.vm.box_version = "~> 20200304.0.0"
  
-  config.vm.network "forwarded_port", guest: 8000, host: 8000
-  # guest is dev server and host is local machine. dev server port 8000 can be accessed with host port 8000; localhost:8000
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
+  # guest is dev server and host is local machine. dev server port 3000 can be accessed with host port 3000; localhost:3000
 
   config.vm.provision "shell", inline: <<-SHELL
     systemctl disable apt-daily.service
