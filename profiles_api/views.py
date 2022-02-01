@@ -1,119 +1,139 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
-from rest_framework import status, viewsets, filters
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework import status, viewsets, filters
 
 from profiles_api import serializers, models, permissions
 
 
 class HelloApiView(APIView):
-    """Test API View"""
+  """Test API View"""
 
-    serializer_class = serializers.HelloSerializer
+  serializer_class = serializers.HelloSerializer
 
-    def get(self, request, format = None):
-        """Returns a list of APIView features"""
+  def get(self, request, format = None):
+    """Returns a list of APIView features"""
 
-        an_apiview = [
-            'Uses HTTP methods as functions (get, post, patch, put, delete)',
-            'Is similar to a traditional Django View',
-            'Gives you the most control over your logic',
-            'Is mapped manually to URLs',
-        ]
+    an_apiview = [
+      'Uses HTTP methods as functions (get, post, patch, put, delete)',
+      'Is similar to a traditional Django View',
+      'Gives you the most control over your logic',
+      'Is mapped manually to URLs',
+    ]
 
-        return Response({ 'message': 'Hello!', 'an_apiview': an_apiview })
+    return Response({ 'message': 'Hello!', 'an_apiview': an_apiview })
+  
+  def post(self, request):
+    """create hello message with our name"""
     
-    def post(self, request):
-        """create hello message with our name"""
-        
-        # serializer_class comes from APIView. request.data is the data we input upon POST or PUT request
-        serializer = self.serializer_class(data = request.data) 
-        
-        if serializer.is_valid():
-            name = serializer.validated_data.get('name')
-            message = f'hellow, {name}!!'
-            return Response({ 'message': message })
-        else: 
-            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-        
-    def put(self, request, pk = None):
-        """Handle updating an object"""
-        return Response({'method': 'PUT'})
-        
-    def patch(self, request, pk = None):
-        """Handle partial updating an object"""
-        return Response({'method': 'PATCH'})
-        
-    def delete(self, request, pk = None):
-        """Handle deleting an object"""
-        return Response({'method': 'DELETE'})
+    # serializer_class comes from APIView. request.data is the data we input upon POST or PUT request
+    serializer = self.serializer_class(data = request.data) 
+      
+    if serializer.is_valid():
+      name = serializer.validated_data.get('name')
+      message = f'hellow, {name}!!'
+      return Response({ 'message': message })
+    else: 
+      return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+      
+  def put(self, request, pk = None):
+    """Handle updating an object"""
+    return Response({'method': 'PUT'})
+      
+  def patch(self, request, pk = None):
+    """Handle partial updating an object"""
+    return Response({'method': 'PATCH'})
+      
+  def delete(self, request, pk = None):
+    """Handle deleting an object"""
+    return Response({'method': 'DELETE'})
 
 
 class HelloViewSet(viewsets.ViewSet):
-    """Test API ViewSet"""
+  """Test API ViewSet"""
 
-    def list(self, request):
-        """Return a hello message."""
+  def list(self, request):
+    """Return a hello message."""
 
-        a_viewset = [
-            'Uses actions (list, create, retrieve, update, partial_update)',
-            'Automatically maps to URLS using Routers',
-            'Provides more functionality with less code',
-        ]
+    a_viewset = [
+      'Uses actions (list, create, retrieve, update, partial_update)',
+      'Automatically maps to URLS using Routers',
+      'Provides more functionality with less code',
+    ]
 
-        return Response({'message': 'Hello!', 'a_viewset': a_viewset})
-    
-    def create(self, request):
-        """Create a new hello message."""
-        serializer = self.serializer_class(data = request.data)
+    return Response({'message': 'Hello!', 'a_viewset': a_viewset})
+  
+  def create(self, request):
+    """Create a new hello message."""
+    serializer = self.serializer_class(data = request.data)
 
-        if serializer.is_valid():
-            name = serializer.validated_data.get('name')
-            message = f'Hello {name}!'
-            return Response({'message': message})
-        else:
-            return Response(
-                serializer.errors,
-                status = status.HTTP_400_BAD_REQUEST
-            )
+    if serializer.is_valid():
+      name = serializer.validated_data.get('name')
+      message = f'Hello {name}!'
+      return Response({'message': message})
+    else:
+      return Response(
+          serializer.errors,
+          status = status.HTTP_400_BAD_REQUEST
+      )
 
-    def retrieve(self, request, pk = None):
-        """Handle getting an object by its ID"""
+  def retrieve(self, request, pk = None):
+    """Handle getting an object by its ID"""
 
-        return Response({'http_method': 'GET'})
+    return Response({'http_method': 'GET'})
 
-    def update(self, request, pk = None):
-        """Handle updating an object"""
+  def update(self, request, pk = None):
+    """Handle updating an object"""
 
-        return Response({'http_method': 'PUT'})
+    return Response({'http_method': 'PUT'})
 
-    def partial_update(self, request, pk = None):
-        """Handle updating part of an object"""
+  def partial_update(self, request, pk = None):
+    """Handle updating part of an object"""
 
-        return Response({'http_method': 'PATCH'})
+    return Response({'http_method': 'PATCH'})
 
-    def destroy(self, request, pk = None):
-        """Handle removing an object"""
+  def destroy(self, request, pk = None):
+    """Handle removing an object"""
 
-        return Response({'http_method': 'DELETE'})
+    return Response({'http_method': 'DELETE'})
     
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    """ handling creating and updating profiles """
-    
-    serializer_class = serializers.UserProfileSerializer
-    queryset = models.UserProfile.objects.all() # allows us to skip base_name in urls.py
-    authentication_classes = (TokenAuthentication, )
-    permission_classes = (permissions.UpdateOwnProfile, )
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('name', 'email', )
+  """ handling creating and updating profiles """
+  
+  serializer_class = serializers.UserProfileSerializer
+  queryset = models.UserProfile.objects.all() # allows us to skip base_name in urls.py
+  authentication_classes = (TokenAuthentication, )
+  permission_classes = (permissions.UpdateOwnProfile, )
+  filter_backends = (filters.SearchFilter, )
+  search_fields = ('name', 'email', )
     
 
 # ObtainAuthToken does not enable itslef in browsable django admin site, we need to overwrite.
 class UserLoginApiView(ObtainAuthToken):
-    """ handling creating user authentication tokens """
+  """ handling creating user authentication tokens """
+  
+  renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+  
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+  """Handles creating, reading and updating profile feed items"""
+  
+  authentication_classes = (TokenAuthentication,)
+  serializer_class = serializers.ProfileFeedItemSerializer
+  queryset = models.ProfileFeedItem.objects.all()
+  permission_classes = (
+    permissions.UpdateOwnStatus, # from permissions.py
+    # IsAuthenticatedOrReadOnly, # from django rest_framework
+    IsAuthenticated, # from django rest_framework, restrict the API not even for read
+  )
+
+  # perform_create allows us to overwrite Django behaviour of creating an object through ModelViewSet
+  # perform_create function gets called every time POST request is made to the viewset
+  def perform_create(self, serializer):
+    """Sets the user profile to the logged in user"""
     
-    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+    # when user makes POST request to the view set, through the token, request contains user information.
+    serializer.save(user_profile = self.request.user) 

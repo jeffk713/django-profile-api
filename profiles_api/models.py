@@ -3,15 +3,15 @@ from django.db import models
 # below 2 lines are to overwrite default Django user model. refer to doc.
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings # retrieve settings.py in project dir for data relationship
 
 
 class UserProfileManager(BaseUserManager):
-  """manger for user profiles"""
+  """manager for user profiles"""
   
   def create_user(self, email, name, password = None):
-    """create a new uer profile"""
+    """create a new user profile"""
     if not email:
       raise ValueError('User must have an email')
     
@@ -33,7 +33,7 @@ class UserProfileManager(BaseUserManager):
     user.save(using = self._db)
     
     return user
-      
+
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
   """Database model for users in the system"""
@@ -62,3 +62,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     """Return string representation of user"""
     return self.email
   
+class ProfileFeedItem(models.Model):
+  """ profile status update """
+  
+  user_profile = models.ForeignKey(
+    settings.AUTH_USER_MODEL, # this way, it reflects the changes automatically
+    on_delete = models.CASCADE
+    )
+
+  status_text = models.CharField(max_length=255)
+  created_on = models.DateTimeField(auto_now_add=True)
+  
+  def __str__(self):
+    """ return the model as string """
+    
+    return slef.status_text
