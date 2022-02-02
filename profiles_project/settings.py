@@ -27,7 +27,7 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1))) # on production it returns False a
 
 ALLOWED_HOSTS = [
     'ec2-35-183-135-107.ca-central-1.compute.amazonaws.com', 
-    '127.0.0.1',
+    'localhost',
     ]
 
 
