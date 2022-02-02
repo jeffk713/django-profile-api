@@ -127,4 +127,4 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'profiles_api.UserProfile' # to configure custom user model in django
 
-STATIC_ROOT = 'django-profiles-api/static/' # Static root is the location django stores all static files upon running collectstatic for deploy
+STATIC_ROOT = 'static/' # Static root is the location django stores all static files upon running collectstatic for deploy
