@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '0v25470^big3oaqd4dli2mfz$^cj3@9)5-nzja3yx)r8ct9$p('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 1))) # on production it returns False and on development it is 1 as default.
 
 ALLOWED_HOSTS = []
 
@@ -123,3 +123,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'profiles_api.UserProfile' # to configure custom user model in django
+
+STATIC_ROOT = 'static/' # Static root is the location django stores all static files upon running collectstatic for deploy

@@ -1,1 +1,1 @@
-# Django rest api 
+# Django rest api practice
