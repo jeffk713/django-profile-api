@@ -5,7 +5,7 @@
 set -e
 
 # TODO: Set to URL of git repo.
-PROJECT_GIT_URL='git@github.com:jeffk713/django-profile-api.git'
+PROJECT_GIT_URL='https://github.com/jeffk713/django-profile-api.git'
 
 PROJECT_BASE_PATH='/usr/local/apps/django-profiles-api' # directory to save the project on AWS server
 
